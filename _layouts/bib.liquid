@@ -85,10 +85,17 @@
           {%- if forloop.last and author_array_limit == author_array_size %}and {% endif -%}
         {% endif %}
         {%- if author_is_self -%}
-          <em>
-            {{- author.first }}
-            {{ author_last_html -}}
-          </em>
+          {%- if entry.co_first == "true" -%}
+            <em><strong>
+              {{- author.first }}
+              {{ author_last_html -}}#
+            </strong></em>
+          {%- else -%}
+            <em><strong>
+              {{- author.first }}
+              {{ author_last_html -}}
+            </strong></em>
+          {%- endif -%}
         {%- else -%}
           {%- if coauthor_url -%}
             <a href="{{ coauthor_url }}">
@@ -166,6 +173,9 @@
     {% if entry.year %}
       {% capture entryyear %}{{ " " }}{{ entry.year }}{% endcapture %}
     {% endif %}
+      {% if entry.vp %}
+      {% capture entryvp %}{{ " " }}{{ entry.vp }}{% endcapture %}
+    {% endif %}
     {% if entry.location %}
       {% capture entrytype %}{{ entrytype }}{{ ", " }}{{ entry.location }}{% endcapture %}
     {% endif -%}
@@ -177,7 +187,7 @@
       {% include hook/bib.liquid %}
     {% endif %}
     {% assign entrytype_text = entrytype | strip_html | strip %}
-    {% capture periodical %}{{ entrytype }}{% if entrytype_text != "" and entryyear != "" %}, {% endif %}{{ entrymonth }}{{ entryyear }}{% endcapture %}
+    {% capture periodical %}{{ entrytype }}{% if entrytype_text != "" and entryyear != "" %}, {% endif %}{{ entrymonth }}{{ entryyear }}{{ ", " }}{{ entryvp }}{% endcapture %}
     <div class="periodical">
       {{ periodical | strip }}
     </div>
